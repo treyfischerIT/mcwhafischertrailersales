@@ -499,6 +499,14 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 2.5rem;
 }
 
+.category-card__thumb {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin-bottom: 4px;
+}
+
 .category-card__title {
   font-size: 1.1rem;
 }
