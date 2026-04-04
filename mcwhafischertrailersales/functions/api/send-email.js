@@ -83,8 +83,9 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ success: true }), { status: 200, headers });
     }
 
-    return new Response(JSON.stringify({ error: 'Failed to send email' }), { status: 500, headers });
+    const errText = await response.text();
+    return new Response(JSON.stringify({ error: 'Failed to send email', status: response.status, detail: errText }), { status: 500, headers });
   } catch (e) {
-    return new Response(JSON.stringify({ error: 'Server error' }), { status: 500, headers });
+    return new Response(JSON.stringify({ error: 'Server error', detail: e.message }), { status: 500, headers });
   }
 }
