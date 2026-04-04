@@ -612,6 +612,17 @@
                 'Deer Blind',
                 'Other'
             ];
+            var categoryMap = {
+                'cargo': 'Cargo',
+                'utility': 'Utility',
+                'landscape': 'Utility',
+                'equipment': 'Equipment',
+                'dump': 'Dump',
+                'gooseneck': 'Gooseneck',
+                'deckover': 'Deckover',
+                'carport': 'Carport',
+                'deer-blind': 'Deer Blind'
+            };
             var items = document.querySelectorAll('.gallery__item');
             items.forEach(function(item, idx) {
                 var img = item.querySelector('img');
@@ -619,6 +630,9 @@
                 var storageKey = 'gallery-classify::' + key;
                 var saved = {};
                 try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (e) {}
+                var cat = item.getAttribute('data-category') || '';
+                var guess = categoryMap[cat] || '';
+                var currentType = (saved.type !== undefined) ? saved.type : guess;
 
                 var wrap = document.createElement('div');
                 wrap.className = 'gallery__classify';
@@ -634,7 +648,7 @@
                     var opt = document.createElement('option');
                     opt.value = t;
                     opt.textContent = t;
-                    if (saved.type === t) opt.selected = true;
+                    if (currentType === t) opt.selected = true;
                     select.appendChild(opt);
                 });
 
