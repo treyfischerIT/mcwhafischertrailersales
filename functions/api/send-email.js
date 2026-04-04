@@ -68,19 +68,6 @@ export async function onRequestPost(context) {
       templateParams[ALLOWED_FIELDS[i]] = sanitize(body[ALLOWED_FIELDS[i]] || '');
     }
 
-    // Debug: check which env vars are set
-    const hasService = !!env.EMAILJS_SERVICE_ID;
-    const hasTemplate = !!env.EMAILJS_TEMPLATE_ID;
-    const hasPublic = !!env.EMAILJS_PUBLIC_KEY;
-    const hasPrivate = !!env.EMAILJS_PRIVATE_KEY;
-
-    if (!hasPrivate) {
-      return new Response(JSON.stringify({
-        error: 'Missing private key',
-        envCheck: { hasService, hasTemplate, hasPublic, hasPrivate }
-      }), { status: 500, headers });
-    }
-
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -97,9 +84,8 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ success: true }), { status: 200, headers });
     }
 
-    const errText = await response.text();
-    return new Response(JSON.stringify({ error: 'Failed to send email', status: response.status, detail: errText }), { status: 500, headers });
+    return new Response(JSON.stringify({ error: 'Failed to send email' }), { status: 500, headers });
   } catch (e) {
-    return new Response(JSON.stringify({ error: 'Server error', detail: e.message }), { status: 500, headers });
+    return new Response(JSON.stringify({ error: 'Server error' }), { status: 500, headers });
   }
 }
