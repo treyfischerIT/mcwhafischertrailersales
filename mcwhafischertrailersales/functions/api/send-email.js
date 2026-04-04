@@ -75,6 +75,7 @@ export async function onRequestPost(context) {
         service_id: env.EMAILJS_SERVICE_ID,
         template_id: env.EMAILJS_TEMPLATE_ID,
         user_id: env.EMAILJS_PUBLIC_KEY,
+        accessToken: env.EMAILJS_PRIVATE_KEY,
         template_params: templateParams,
       }),
     });
