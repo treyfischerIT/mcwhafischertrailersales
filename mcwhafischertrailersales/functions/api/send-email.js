@@ -52,6 +52,28 @@ export async function onRequestPost(context) {
   try {
     const body = await request.json();
 
+    // Verify Cloudflare Turnstile token
+    const turnstileToken = body['cf-turnstile-response'];
+    if (!turnstileToken) {
+      return new Response(JSON.stringify({ error: 'Security check required' }), { status: 400, headers });
+    }
+
+    if (env.TURNSTILE_SECRET_KEY) {
+      const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          secret: env.TURNSTILE_SECRET_KEY,
+          response: turnstileToken,
+          remoteip: ip,
+        }),
+      });
+      const turnstileData = await turnstileRes.json();
+      if (!turnstileData.success) {
+        return new Response(JSON.stringify({ error: 'Security check failed' }), { status: 403, headers });
+      }
+    }
+
     // Validate required fields
     if (!body.from_name || !body.from_email || !body.phone) {
       return new Response(JSON.stringify({ error: 'Name, email, and phone are required' }), { status: 400, headers });

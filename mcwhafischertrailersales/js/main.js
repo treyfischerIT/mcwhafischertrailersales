@@ -37,6 +37,15 @@ document.addEventListener('DOMContentLoaded', function () {
       submitBtn.textContent = 'Sending...';
       submitBtn.disabled = true;
 
+      var turnstileResponse = document.querySelector('[name="cf-turnstile-response"]');
+      var turnstileToken = turnstileResponse ? turnstileResponse.value : '';
+      if (!turnstileToken) {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        alert('Please complete the security check before submitting.');
+        return;
+      }
+
       var templateParams = {
         from_name: document.getElementById('name').value,
         from_email: document.getElementById('email').value,
@@ -45,7 +54,8 @@ document.addEventListener('DOMContentLoaded', function () {
         axle: document.getElementById('axle').value,
         width: document.getElementById('width').value,
         length: document.getElementById('length').value,
-        message: document.getElementById('message').value
+        message: document.getElementById('message').value,
+        'cf-turnstile-response': turnstileToken
       };
 
       fetch('/api/send-email', {
