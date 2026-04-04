@@ -22,11 +22,17 @@ document.addEventListener('DOMContentLoaded', function () {
   // EmailJS Contact Form
   var contactForm = document.getElementById('contact-form');
   if (contactForm) {
-    // TODO: Replace these with your actual EmailJS IDs
-    emailjs.init('YOUR_PUBLIC_KEY');
+    emailjs.init('Mlc4MiQWhwp8dyxr4');
 
     contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      // Honeypot check — bots fill this hidden field, real users don't
+      var honeypot = document.getElementById('website');
+      if (honeypot && honeypot.value) {
+        contactForm.innerHTML = '<div style="text-align:center;padding:40px 0;"><h3 style="color:#2e7d32;margin-bottom:12px;">Quote Request Sent!</h3><p>Thank you! We\'ll get back to you within 1 business day.</p><p style="margin-top:16px;"><a href="tel:3613879108">Call (361) 387-9108</a> for immediate assistance.</p></div>';
+        return;
+      }
 
       var submitBtn = contactForm.querySelector('button[type="submit"]');
       var originalText = submitBtn.textContent;
@@ -44,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         message: document.getElementById('message').value
       };
 
-      emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+      emailjs.send('service_nx2v1vc', 'template_tqlmtpr', templateParams)
         .then(function () {
           contactForm.innerHTML = '<div style="text-align:center;padding:40px 0;"><h3 style="color:#2e7d32;margin-bottom:12px;">Quote Request Sent!</h3><p>Thank you! We\'ll get back to you within 1 business day.</p><p style="margin-top:16px;"><a href="tel:3613879108">Call (361) 387-9108</a> for immediate assistance.</p></div>';
         })
