@@ -628,6 +628,35 @@
                 'carport': 'Carport',
                 'deer-blind': 'Deer Blind'
             };
+            // Export button
+            var exportBar = document.createElement('div');
+            exportBar.style.cssText = 'padding:12px;background:#fff3cd;border:1px solid #ffc107;margin:16px 0;text-align:center;';
+            var exportBtn = document.createElement('button');
+            exportBtn.textContent = 'Export Classifications (copy this to share)';
+            exportBtn.style.cssText = 'padding:10px 20px;font-size:14px;cursor:pointer;background:#28a745;color:#fff;border:none;border-radius:4px;';
+            var exportArea = document.createElement('textarea');
+            exportArea.style.cssText = 'width:100%;height:200px;margin-top:10px;display:none;font-family:monospace;font-size:11px;padding:8px;';
+            exportBtn.addEventListener('click', function() {
+                var data = {};
+                document.querySelectorAll('.gallery__item').forEach(function(it) {
+                    var im = it.querySelector('img');
+                    if (!im) return;
+                    var src = im.getAttribute('src');
+                    var sk = 'gallery-classify::' + src;
+                    var v = localStorage.getItem(sk);
+                    if (v) { try { data[src] = JSON.parse(v); } catch(e){} }
+                });
+                exportArea.value = JSON.stringify(data, null, 2);
+                exportArea.style.display = 'block';
+                exportArea.select();
+            });
+            exportBar.appendChild(exportBtn);
+            exportBar.appendChild(exportArea);
+            var filterBar = document.querySelector('.gallery__filters');
+            if (filterBar && filterBar.parentNode) {
+                filterBar.parentNode.insertBefore(exportBar, filterBar.nextSibling);
+            }
+
             var items = document.querySelectorAll('.gallery__item');
             items.forEach(function(item, idx) {
                 var img = item.querySelector('img');
