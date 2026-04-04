@@ -185,6 +185,11 @@
                     <div class="contact__form">
                         <h3 style="font-size:1.3rem;margin-bottom:20px;">Request a Free Quote</h3>
                         <form id="contact-form">
+                            <!-- Honeypot field — hidden from real users, catches bots -->
+                            <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                                <label for="website">Website</label>
+                                <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                            </div>
                             <div class="form__row">
                                 <div class="form__group">
                                     <label class="form__label" for="name">Name *</label>
