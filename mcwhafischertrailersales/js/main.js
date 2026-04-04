@@ -19,11 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // EmailJS Contact Form
+  // Contact Form (server-side EmailJS via Cloudflare Pages Function)
   var contactForm = document.getElementById('contact-form');
   if (contactForm) {
-    emailjs.init('Mlc4MiQWhwp8dyxr4');
-
     contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -50,8 +48,13 @@ document.addEventListener('DOMContentLoaded', function () {
         message: document.getElementById('message').value
       };
 
-      emailjs.send('service_nx2v1vc', 'template_tqlmtpr', templateParams)
-        .then(function () {
+      fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(templateParams)
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('Send failed');
           contactForm.innerHTML = '<div style="text-align:center;padding:40px 0;"><h3 style="color:#2e7d32;margin-bottom:12px;">Quote Request Sent!</h3><p>Thank you! We\'ll get back to you within 1 business day.</p><p style="margin-top:16px;"><a href="tel:3613879108">Call (361) 387-9108</a> for immediate assistance.</p></div>';
         })
         .catch(function () {
